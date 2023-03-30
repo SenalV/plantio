@@ -1,35 +1,61 @@
 import { View, Text } from "react-native";
 import { Icon } from "react-native-eva-icons";
 import { TouchableOpacity } from "react-native";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { findAll } from "../services/diseases.mjs";
 
 export default function HomeScreen() {
   const url = "http://127.0.0.1:8000/ping";
 
-  const getPing = () => {
-    axios
-      .get("http://127.0.0.1:8000/ping")
-      .then(function (response) {
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+  const [loading, setLoading] = useState(false);
+  const [diseases, setDiseases] = useState([]);
 
-    // fetch("http://127.0.0.1:8000/ping")
-    //   .then((response) => response.json())
-    //   .then((json) => {
-    //     console.log(json);
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
-  };
+  const fetchData = async () => {
+    setLoading(true)
 
-  useEffect(() => {
-    getPing();
-  }, []);
+    const res = await findAll()
+
+    setDiseases([...res])
+    setLoading(false)
+}
+
+useEffect(() => {
+  fetchData();
+},[])
+
+if(loading) {
+  return (
+    <View classNam="flex items-center justify-center h-screen">
+      <Text>Loading</Text>
+    </View>
+  )
+}
+
+
+  // const getPing = () => {
+  //   axios
+  //     .get("http://127.0.0.1:8000/ping")
+  //     .then(function (response) {
+  //       console.log(response.data);
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+
+  //   // fetch("http://127.0.0.1:8000/ping")
+  //   //   .then((response) => response.json())
+  //   //   .then((json) => {
+  //   //     console.log(json);
+  //   //   })
+  //   //   .catch((error) => {
+  //   //     console.error(error);
+  //   //   });
+  // };
+
+  // useEffect(() => {
+  //   // getPing();
+  // }, []);
 
   return (
     <View className="h-screen p-5 mt-8">
