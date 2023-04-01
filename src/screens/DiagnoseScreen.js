@@ -2,11 +2,17 @@ import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { Camera, CameraType } from "expo-camera";
+import axios from "axios";
+import { ActivityIndicator } from "react-native";
+
+const API_URL = "https://us-central1-plantio-272dd.cloudfunctions.net/predict";
 
 export default function DiagnoseScreen() {
   const [image, setImage] = useState(null);
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [prediction, setPrediction] = useState();
+  const [loading, setLoading] = useState(false);
 
   function toggleCameraType() {
     setType((current) =>
@@ -29,6 +35,34 @@ export default function DiagnoseScreen() {
     }
   };
 
+  const sendPostRequest = async () => {
+    if (image) {
+      setLoading(true);
+      console.log("predicting....");
+      const formData = new FormData();
+      formData.append("file", {
+        uri: image,
+        name: "image.jpg",
+        type: "image/jpeg",
+      });
+      console.log("File == > " + image);
+      try {
+        const response = await axios.post(API_URL, formData, {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log(response.data);
+        setPrediction(response.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   return (
     <ScrollView>
       <View className="h-screen p-5 mt-8">
@@ -41,7 +75,7 @@ export default function DiagnoseScreen() {
           <Text className=" text-gray-500 font-bold text-base">
             Upload image to diagnose.
           </Text>
-          <Text className="mb-3 text-green-700 text-sm">
+          <Text className="mb-3 text-green-700 text-sm text-center">
             Select and upload an image to diagnose the disease.
           </Text>
           <TouchableOpacity onPress={pickImage}>
@@ -65,13 +99,29 @@ export default function DiagnoseScreen() {
               style={{ width: 200, height: 200 }}
               className="rounded-lg"
             />
-            <TouchableOpacity className="mt-5">
+            <TouchableOpacity className="mt-5" onPress={sendPostRequest}>
               <View className="bg-slate-600 p-3 w-2/5 flex items-center justify-center rounded-xl">
-                <Text className="font-bold text-sm text-blue-100">
-                  Diagnose
-                </Text>
+                {loading ? (
+                  <View className="flex flex-row">
+                    <Text className="font-bold text-sm text-blue-100 mr-2">
+                      Detecting
+                    </Text>
+                    <ActivityIndicator size="small" />
+                  </View>
+                ) : (
+                  <Text className="font-bold text-sm text-blue-100">
+                    Diagnose
+                  </Text>
+                )}
               </View>
             </TouchableOpacity>
+
+            {prediction && (
+              <View className="mt-5">
+                <Text>Disease : {prediction.class}</Text>
+                <Text>Confidence : {prediction.confidence}%</Text>
+              </View>
+            )}
           </View>
         )}
 
@@ -101,7 +151,6 @@ export default function DiagnoseScreen() {
           </View>
         </Camera>
       </View> */}
-
     </ScrollView>
   );
 }
