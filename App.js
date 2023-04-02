@@ -13,7 +13,7 @@ const Stack = createNativeStackNavigator();
 function DiagnoseStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Diagnose" component={DiagnoseScreen} />
+      <Stack.Screen name="Diagnose-screen" component={DiagnoseScreen} />
       <Stack.Screen name="Disease" component={DiseaseScreen} />
     </Stack.Navigator>
   );
@@ -70,7 +70,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen
-            name="Home"
+            name="home"
             component={HomeTabNavigator}
             options={{ headerShown: false }}
           />
