@@ -1,5 +1,3 @@
-import { StatusBar } from "expo-status-bar";
-import { Text, View, TouchableOpacity } from "react-native";
 import HomeScreen from "./src/screens/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -7,6 +5,7 @@ import DiagnoseScreen from "./src/screens/DiagnoseScreen";
 import { Icon } from "react-native-eva-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import DiseaseScreen from "./src/screens/DiseaseScreen";
+import { StatusBar } from "expo-status-bar";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -66,18 +65,18 @@ function HomeTabNavigator() {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-      screenOptions={{
-        headerShown: false
-      }}>
-        <Stack.Screen
-          name="Home"
-          component={HomeTabNavigator}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="Disease" component={DiseaseScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <>
+      <StatusBar style="dark" />
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen
+            name="Home"
+            component={HomeTabNavigator}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="Disease" component={DiseaseScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
   );
 }

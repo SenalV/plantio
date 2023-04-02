@@ -87,7 +87,7 @@ export default function DiagnoseScreen() {
         contentContainerStyle={{ flexGrow: 1, minHeight: "100%" }}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="p-5 mt-8">
+        <View className="p-5">
           <Text className="text-xl font-semibold">Diagnose the disease.</Text>
           <Text className="text-gray-500">
             Diagnose the disease and find out what you can do to solve.
