@@ -1,4 +1,4 @@
-import { getDocs, collection } from "firebase/firestore"; 
+import { getDocs, collection, doc, getDoc, query, where } from "firebase/firestore"; 
 import { getDb } from "./db.mjs"
 
 const collection_name = "Plant Disease"
@@ -16,4 +16,9 @@ export const findAll = async () => {
     })
 
     return res
+}
+
+export const findOne = async id => {
+    const d = await getDoc(doc(getDb(), collection_name, id)) 
+    return d.data()
 }
