@@ -43,7 +43,7 @@ function HomeTabNavigator() {
             />
           )
         },
-        tabBarActiveTintColor: "green",
+        tabBarActiveTintColor: "black",
         tabBarInactiveTintColor: "gray",
         tabBarLabelStyle: {
           fontSize: 12,
@@ -74,7 +74,6 @@ export default function App() {
             component={HomeTabNavigator}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="Disease" component={DiseaseScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </>
