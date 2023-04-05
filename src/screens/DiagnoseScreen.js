@@ -1,6 +1,13 @@
-import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Modal,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Camera, CameraType } from "expo-camera";
 import axios from "axios";
 import { ActivityIndicator } from "react-native";
@@ -19,8 +26,18 @@ export default function DiagnoseScreen() {
   const [prediction, setPrediction] = useState();
   const [loading, setLoading] = useState(false);
   const [remedy, setRemedy] = useState();
+  const [showCamera, setShowCamera] = useState(false);
 
   const navigator = useNavigation();
+  const cameraRef = useRef();
+
+  const takePicture = async () => {
+    if (cameraRef.current) {
+      const { uri } = await cameraRef.current.takePictureAsync();
+      setImage(uri);
+      setShowCamera(false);
+    }
+  };
 
   function toggleCameraType() {
     setType((current) =>
@@ -72,7 +89,7 @@ export default function DiagnoseScreen() {
             console.log(res.data);
             setPrediction(res.data);
             fetchRemedy();
-            navigator.navigate('Disease', {data: res.data});
+            navigator.navigate("Disease", { data: res.data });
           });
       } catch (error) {
         console.error(error);
@@ -82,6 +99,10 @@ export default function DiagnoseScreen() {
     }
   };
 
+  useEffect(() => {
+    requestPermission();
+  }, []);
+
   return (
     <SafeAreaView className="flex-1 bg-white pt-5">
       <ScrollView
@@ -89,13 +110,35 @@ export default function DiagnoseScreen() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
+        <Modal visible={showCamera}>
+          <View style={styles.cameraContainer}>
+            <Camera style={styles.camera} type={type} ref={cameraRef}>
+              <View className="flex-1 flex-row justify-center mb-5">
+                <TouchableOpacity style={styles.button} onPress={takePicture}>
+                  <View className="bg-white p-5 rounded-full">
+                    <Icon
+                      name="camera-outline"
+                      fill="black"
+                      height={30}
+                      width={30}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </Camera>
+          </View>
+        </Modal>
+
         <View className="p-5">
           <Text className="text-xl font-semibold">Diagnose the disease.</Text>
           <Text className="text-gray-500">
             Diagnose the disease and find out what you can do to solve.
           </Text>
 
-          <View className="p-5 rounded-xl flex items-center justify-center mt-10 bg-black" style={styles.shadow}>
+          <View
+            className="p-5 rounded-xl flex items-center justify-center mt-10 bg-black"
+            style={styles.shadow}
+          >
             <Text className=" text-gray-200 font-bold text-base">
               Upload image to diagnose.
             </Text>
@@ -103,7 +146,6 @@ export default function DiagnoseScreen() {
               Select and upload an image to diagnose the disease.
             </Text>
             <TouchableOpacity onPress={pickImage}>
-              {/* <Button title="Upload Image" /> */}
               <View className="flex flex-row bg-green-700 p-3 w-fit items-center justify-center rounded-xl">
                 <Icon
                   name="image-outline"
@@ -121,8 +163,8 @@ export default function DiagnoseScreen() {
 
           {image && (
             <View className="flex justify-center w-full items-center mt-10">
-              <Text className="mb-3 text-gray-500 text-center w-4/5">
-                Uploaded Image, upload again to change or click Diagnose to
+              <Text className="mb-5 text-gray-500 text-center w-4/5 bg-green-50 p-3 rounded-lg">
+                Uploaded / Captured Image, upload or capture again to change or click Diagnose to
                 proceed
               </Text>
               <Image
@@ -155,25 +197,20 @@ export default function DiagnoseScreen() {
                   )}
                 </View>
               </TouchableOpacity>
-
-              {prediction && (
-                <View className="mt-5">
-                  <Text>Disease : {prediction.class}</Text>
-                  <Text>Confidence : {prediction.confidence}%</Text>
-                  <Text>{JSON.stringify(remedy)}</Text>
-                </View>
-              )}
             </View>
           )}
 
-          <View className="p-5 rounded-xl flex items-center justify-center mt-10 bg-black" style={styles.shadow}>
+          <View
+            className="p-5 rounded-xl flex items-center justify-center mt-10 bg-black"
+            style={styles.shadow}
+          >
             <Text className=" text-gray-200 font-bold text-base">
               Capture image to diagnose.
             </Text>
             <Text className="mb-3 text-green-600 text-sm text-center">
               Capture an image using camera to diagnose the disease.
             </Text>
-            <TouchableOpacity onPress={pickImage}>
+            <TouchableOpacity onPress={() => setShowCamera(true)}>
               <View className="flex flex-row bg-blue-600 p-3 w-fit items-center justify-center rounded-xl">
                 <Icon
                   name="camera-outline"
@@ -189,15 +226,6 @@ export default function DiagnoseScreen() {
             </TouchableOpacity>
           </View>
         </View>
-        {/* <View>
-          <Camera type={type} className="h-full mb-10">
-            <View>
-              <TouchableOpacity onPress={toggleCameraType} className>
-                <Text>Flip Camera</Text>
-              </TouchableOpacity>
-            </View>
-          </Camera>
-        </View> */}
       </ScrollView>
     </SafeAreaView>
   );
