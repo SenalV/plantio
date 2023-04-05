@@ -12,8 +12,8 @@ const SubmittedEntry = (props) => {
   // Finally got this to work! Before I was trying to check if allEntries.route.params was undefined, but since this variable is only initialzed when the event happens, it wasn't even reading that variable. Of course, it had to look at the props for it to evaluate this!
   console.log('my journal rendered')
 
-  if (props.route.params?.allEntries === undefined) {
-        return (
+  if (props.route.params === undefined) {
+    return (
       <View style={{backgroundColor:'#C1F8CF',display:'flex',alignItems:'center',height:'100%',justifyContent:'center',padding:25}}>
         <Text style={{textAlign:'center',marginBottom:20,fontSize:12}}>You haven't created any entries yet.</Text>
         <Text style={{textAlign:'center'}}>To create an entry, go to the + New Entry.</Text>
@@ -26,17 +26,15 @@ const SubmittedEntry = (props) => {
     )
   } 
 
-  const {allEntries} = props.route.params;
-  const [savedEntries, setSavedEntries] = useState([])
+  const [savedEntries, setSavedEntries] = useState([]);
+const { allEntries } = props.route.params;
 
-  useEffect(() => {
-    if (allEntries) {
-      setSavedEntries(prevEntries => {
-        const newEntries = allEntries.filter(entry => !prevEntries.find(prevEntry => prevEntry.id === entry.id))
-        return [...prevEntries, ...newEntries]
-      });
-    }
-  }, [allEntries]);  
+useEffect(() => {
+  if (allEntries) {
+    setSavedEntries(prevEntries => [...prevEntries, ...allEntries]);
+  }
+}, [allEntries]);
+ 
 
 
   const submittedEntries = savedEntries?.map(entry => 
