@@ -2,14 +2,17 @@ import { View, Text, ScrollView, SafeAreaView, Image } from "react-native";
 import { Icon } from "react-native-eva-icons";
 import { TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { findAll } from "../services/diseases.mjs";
 import { ActivityIndicator } from "react-native";
 import plant from "../../assets/plant-bg.jpg";
 import styles from "../styles/styles.js";
+import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen() {
   const url = "http://127.0.0.1:8000/ping";
+
+
+  const navigator = useNavigation();
 
   const [loading, setLoading] = useState(false);
   const [diseases, setDiseases] = useState([]);
@@ -103,6 +106,56 @@ export default function HomeScreen() {
               </TouchableOpacity>
             </View>
           </View>
+
+          <Text className="my-5 text-gray-400 font-semibold text-xl">Track & Keep</Text>
+
+          <TouchableOpacity onPress={()=> navigator.navigate("Plant")}>
+            <View
+              className="bg-black p-5 rounded-xl flex flex-row items-center justify-between"
+              style={styles.shadow}
+            >
+              <Icon
+                name="thermometer-plus"
+                fill="white"
+                height={20}
+                width={20}
+                className="mr-2"
+              />
+              <Text className="text-white">Track your plants environment</Text>
+
+              <Icon
+                name="arrow-ios-forward-outline"
+                fill="white"
+                height={20}
+                width={20}
+                // className="ml-10"
+              />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={()=> navigator.navigate("Plant")}>
+            <View
+              className="mt-5 bg-black p-5 rounded-xl flex flex-row items-center justify-between"
+              style={styles.shadow}
+            >
+              <Icon
+                name="book"
+                fill="white"
+                height={20}
+                width={20}
+                className="mr-2"
+              />
+              <Text className="text-white">Keep a Journal</Text>
+
+              <Icon
+                name="arrow-ios-forward-outline"
+                fill="white"
+                height={20}
+                width={20}
+                // className="ml-10"
+              />
+            </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
