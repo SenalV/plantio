@@ -25,7 +25,7 @@ export default function DiagnoseScreen() {
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [prediction, setPrediction] = useState();
   const [loading, setLoading] = useState(false);
-  const [remedy, setRemedy] = useState();
+  // const [remedy, setRemedy] = useState();
   const [showCamera, setShowCamera] = useState(false);
 
   const navigator = useNavigation();
@@ -62,8 +62,8 @@ export default function DiagnoseScreen() {
 
   const fetchRemedy = async (name) => {
     console.log("getting remedy....");
-    const res = await findOne("2kcGVYW8WAxte4FPmyJD");
-    setRemedy(res);
+    const res = await findByName(name);
+    return res;
   };
 
   const sendPostRequest = async () => {
@@ -85,11 +85,11 @@ export default function DiagnoseScreen() {
               "Content-Type": "multipart/form-data",
             },
           })
-          .then((res) => {
+          .then(async (res) => {
             console.log(res.data);
             setPrediction(res.data);
-            fetchRemedy();
-            navigator.navigate("Disease", { data: res.data });
+            const remedy = await fetchRemedy(res.data.class);
+            navigator.navigate("Disease", { data: res.data, image: image, remedy: remedy });
           });
       } catch (error) {
         console.error(error);
@@ -129,6 +129,13 @@ export default function DiagnoseScreen() {
           </View>
         </Modal>
 
+        {/* {prediction && (
+          <View>
+            <Text>{JSON.stringify(prediction.class)}</Text>
+            <Text>{JSON.stringify(remedy)}</Text>
+          </View>
+        )} */}
+
         <View className="p-5">
           <Text className="text-xl font-semibold">Diagnose the disease.</Text>
           <Text className="text-gray-500">
@@ -136,25 +143,25 @@ export default function DiagnoseScreen() {
           </Text>
 
           <View
-            className="p-5 rounded-xl flex items-center justify-center mt-10 bg-black"
+            className="p-5 rounded-xl flex items-center justify-center mt-10 bg-lime-800"
             style={styles.shadow}
           >
             <Text className=" text-gray-200 font-bold text-base">
               Upload image to diagnose.
             </Text>
-            <Text className="mb-3 text-green-600 text-sm text-center">
+            <Text className="mb-3 text-green-200 text-sm text-center">
               Select and upload an image to diagnose the disease.
             </Text>
             <TouchableOpacity onPress={pickImage}>
-              <View className="flex flex-row bg-green-700 p-3 w-fit items-center justify-center rounded-xl">
+              <View className="flex flex-row bg-lime-500 p-3 w-fit items-center justify-center rounded-xl">
                 <Icon
                   name="image-outline"
-                  fill="white"
+                  fill="black"
                   height={20}
                   width={20}
                   className="mr-2"
                 />
-                <Text className="font-bold text-sm text-green-100">
+                <Text className="font-bold text-sm text-black">
                   Upload Image
                 </Text>
               </View>
@@ -164,8 +171,8 @@ export default function DiagnoseScreen() {
           {image && (
             <View className="flex justify-center w-full items-center mt-10">
               <Text className="mb-5 text-gray-500 text-center w-4/5 bg-green-50 p-3 rounded-lg">
-                Uploaded / Captured Image, upload or capture again to change or click Diagnose to
-                proceed
+                Uploaded / Captured Image, upload or capture again to change or
+                click Diagnose to proceed
               </Text>
               <Image
                 source={{ uri: image }}
@@ -173,7 +180,7 @@ export default function DiagnoseScreen() {
                 className="rounded-lg"
               />
               <TouchableOpacity className="mt-5" onPress={sendPostRequest}>
-                <View className="bg-slate-600 p-3 w-fit flex items-center justify-center rounded-xl">
+                <View className="bg-black p-3 w-fit flex items-center justify-center rounded-xl">
                   {loading ? (
                     <View className="flex flex-row">
                       <Text className="font-bold text-sm text-white mr-2">
@@ -201,25 +208,25 @@ export default function DiagnoseScreen() {
           )}
 
           <View
-            className="p-5 rounded-xl flex items-center justify-center mt-10 bg-black"
+            className="p-5 rounded-xl flex items-center justify-center mt-10 bg-lime-800"
             style={styles.shadow}
           >
             <Text className=" text-gray-200 font-bold text-base">
               Capture image to diagnose.
             </Text>
-            <Text className="mb-3 text-green-600 text-sm text-center">
+            <Text className="mb-3 text-green-200 text-sm text-center">
               Capture an image using camera to diagnose the disease.
             </Text>
             <TouchableOpacity onPress={() => setShowCamera(true)}>
-              <View className="flex flex-row bg-blue-600 p-3 w-fit items-center justify-center rounded-xl">
+              <View className="flex flex-row bg-blue-400 p-3 w-fit items-center justify-center rounded-xl">
                 <Icon
                   name="camera-outline"
-                  fill="white"
+                  fill="black"
                   height={20}
                   width={20}
                   className="mr-2"
                 />
-                <Text className="font-bold text-sm text-blue-100">
+                <Text className="font-bold text-sm text-black">
                   Capture Image
                 </Text>
               </View>

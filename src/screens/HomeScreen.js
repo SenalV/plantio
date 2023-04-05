@@ -57,6 +57,8 @@ export default function HomeScreen() {
               </Text>
             </View>
 
+            {/* <Text>{JSON.stringify(diseases)}</Text> */}
+
             <View className="flex flex-row">
               <TouchableOpacity>
                 <Icon
@@ -74,7 +76,7 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          <View className="mt-10 bg-black p-5 rounded-xl" style={styles.shadow}>
+          <View className="mt-10 bg-lime-800 p-5 rounded-xl" style={styles.shadow}>
             <View className="flex flex-row items-center">
               <Image
                 source={plant}
@@ -92,16 +94,16 @@ export default function HomeScreen() {
               Take a picture to see and diagnose possible diseases.
             </Text>
             <View className="mt-5">
-              <TouchableOpacity>
-                <View className="flex flex-row bg-green-700 p-3 w-2/5 items-center justify-center rounded-xl">
+              <TouchableOpacity onPress={()=> navigator.navigate("Diagnose")}>
+                <View className="flex flex-row bg-lime-500 p-3 w-2/5 items-center justify-center rounded-xl">
                   <Icon
                     name="image-outline"
-                    fill="white"
+                    fill="black"
                     height={20}
                     width={20}
                     className="mr-2"
                   />
-                  <Text className="font-bold text-sm text-white">Diagnose</Text>
+                  <Text className="font-bold text-sm text-black">Diagnose</Text>
                 </View>
               </TouchableOpacity>
             </View>
@@ -111,7 +113,7 @@ export default function HomeScreen() {
 
           <TouchableOpacity onPress={()=> navigator.navigate("Plant")}>
             <View
-              className="bg-black p-5 rounded-xl flex flex-row items-center justify-between"
+              className="bg-lime-800 p-5 rounded-xl flex flex-row items-center justify-between"
               style={styles.shadow}
             >
               <Icon
@@ -135,7 +137,7 @@ export default function HomeScreen() {
 
           <TouchableOpacity onPress={()=> navigator.navigate("Plant")}>
             <View
-              className="mt-5 bg-black p-5 rounded-xl flex flex-row items-center justify-between"
+              className="mt-5 bg-lime-800 p-5 rounded-xl flex flex-row items-center justify-between"
               style={styles.shadow}
             >
               <Icon

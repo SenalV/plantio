@@ -7,6 +7,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import DiseaseScreen from "./src/screens/DiseaseScreen";
 import { StatusBar } from "expo-status-bar";
 import PlantScreen from "./src/screens/PlantScreen";
+import JournalScreen from "./src/screens/JournalScreen";
+import AddJournal from "./src/screens/AddJournal";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -24,6 +26,15 @@ function PlantStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="plant" component={PlantScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function JournalStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="journal" component={JournalScreen} />
+      <Stack.Screen name="add-journal" component={AddJournal} />
     </Stack.Navigator>
   );
 }
@@ -46,6 +57,8 @@ function HomeTabNavigator() {
             iconName = focused
               ? "thermometer-plus"
               : "thermometer-plus-outline";
+          } else if (route.name === "Journal") {
+            iconName = focused ? "book" : "book-outline"; 
           }
 
           // return <Icon name={iconName} size={size} color={color} />;
@@ -68,6 +81,7 @@ function HomeTabNavigator() {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Diagnose" component={DiagnoseStack} />
       <Tab.Screen name="Plant" component={PlantStack} />
+      <Tab.Screen name="Journal" component={JournalStack} />
     </Tab.Navigator>
   );
 }
