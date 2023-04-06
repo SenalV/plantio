@@ -3,6 +3,7 @@ import { View, Text, SafeAreaView, ScrollView, Image } from "react-native";
 import styles from "../styles/styles";
 
 export default function DiseaseScreen({ navigation, route }) {
+  // Extract necessary data from route params
   const name = route.params.data.class;
   const item = route.params.remedy;
   const imagePath = route.params.image;
