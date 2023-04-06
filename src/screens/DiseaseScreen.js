@@ -8,6 +8,7 @@ export default function DiseaseScreen({ navigation, route }) {
   const item = route.params.remedy;
   const imagePath = route.params.image;
 
+  // Function to format remedy text into bullet points
   function createBulletPoints(text) {
     const steps = text.split(". ");
     const bulletPoints = steps.map((step) => `${step.trim()}`);
@@ -16,17 +17,20 @@ export default function DiseaseScreen({ navigation, route }) {
 
   const breakText = createBulletPoints(item.Remedy);
 
+  // Call the createBulletPoints function and log the result to the console when the component mounts
   useEffect(() => {
     console.log(route.params.remedy.Remedy);
   }, []);
 
+  // Render the SafeAreaView component to provide a safe area for content
+  // Render a ScrollView to enable scrolling when content overflows
   return (
     <SafeAreaView className="flex-1 bg-white h-screen">
       <ScrollView
         contentContainerStyle={{ flexGrow: 1, minHeight: "100%" }}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
-        className="h-full"
+        className="h-full"//class name declared as h-full
       >
         <View>
           <View className="p-5">
