@@ -1,8 +1,12 @@
+// Import necessary components from React and React Native
 import React, { useState, useEffect } from "react";
 import { View, Text, SafeAreaView, ScrollView, Image } from "react-native";
-import styles from "../styles/styles";
 
+import styles from "../styles/styles";// Import styles from external file
+
+// Declare and export the DiseaseScreen component, which receives navigation and route as props
 export default function DiseaseScreen({ navigation, route }) {
+  
   // Extract necessary data from route params
   const name = route.params.data.class;
   const item = route.params.remedy;
