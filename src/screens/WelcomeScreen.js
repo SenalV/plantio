@@ -1,8 +1,6 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { themeColors } from '../theme'
-// import { useNavigation } from '@react-navigation/native'
 import { useNavigation } from '@react-navigation/native'
 
 export default function WelcomeScreen() {
@@ -15,12 +13,13 @@ export default function WelcomeScreen() {
                 Welcome to Plantio
             </Text>
             <View className="flex-row justify-center">
-                <Image source={require("../assets/images/plant6.png")}
+                <Image source={require("../../assets/images/plant6.png")}
+
                     style={{width: 300, height: 520}} />
             </View>
             <View className="space-y-4">
                 <TouchableOpacity
-                    onPress={()=> navigation.navigate('SignUp')}
+                    onPress={()=> navigation.navigate('Signup')}
                     className="py-3  mx-7 rounded-xl" style={{backgroundColor: '#569033'}}>
                         <Text 
                             className="text-xl font-bold text-center text-gray-700 "

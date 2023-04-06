@@ -22,3 +22,12 @@ export const findOne = async id => {
     const d = await getDoc(doc(getDb(), collection_name, id)) 
     return d.data()
 }
+
+export const findByName = async (name) => {
+    const querySnapshot = await getDocs(
+      query(collection(getDb(), "Plant Disease"), where("Name", "==", name))
+    );
+    const diseaseData = querySnapshot.docs[0]?.data() || null;
+    return diseaseData;
+  };
+  
