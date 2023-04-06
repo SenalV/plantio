@@ -1,98 +1,134 @@
-import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Text, Pressable, Image, StyleSheet, Alert, TouchableOpacity } from 'react-native';
-import { Card, Icon } from 'react-native-elements';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  ScrollView,
+  Text,
+  Pressable,
+  Image,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
+import { Card, Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-// import * as SecureStore from "expo-secure-store";
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SubmittedEntry = (props) => {
-    const navigator = useNavigation()
+  const navigator = useNavigation();
   // console.log(`Props: ${props}`)
 
-  // Finally got this to work! Before I was trying to check if allEntries.route.params was undefined, but since this variable is only initialzed when the event happens, it wasn't even reading that variable. Of course, it had to look at the props for it to evaluate this!
-  console.log('my journal rendered')
+  console.log("my journal rendered");
 
   if (props.route.params === undefined) {
     return (
-      <View style={{backgroundColor:'#C1F8CF',display:'flex',alignItems:'center',height:'100%',justifyContent:'center',padding:25}}>
-        <Text style={{textAlign:'center',marginBottom:20,fontSize:12}}>You haven't created any entries yet.</Text>
-        <Text style={{textAlign:'center'}}>To create an entry, go to the + New Entry.</Text>
-        <TouchableOpacity className="absolute bottom-4 right-4 bg-lime-800 p-3 px-4 rounded-full"
-        onPress={() => navigator.navigate("add-journal")}
+      <View
+        style={{
+          backgroundColor: "#ffffff",
+          display: "flex",
+          alignItems: "center",
+          height: "100%",
+          justifyContent: "center",
+          padding: 25,
+        }}
+      >
+        <Text style={{ textAlign: "center", marginBottom: 20, fontSize: 12 }}>
+          You haven't created any entries yet.
+        </Text>
+        <Text style={{ textAlign: "center" }}>
+          To create an entry, go to the Add Entry + .
+        </Text>
+        <TouchableOpacity
+          className="absolute bottom-4 right-4 bg-lime-800 p-3 px-4 rounded-full"
+          onPress={() => navigator.navigate("add-journal")}
         >
           <Text className="text-white font-bold">Add Entry +</Text>
         </TouchableOpacity>
       </View>
-    )
-  } 
+    );
+  }
 
   const [savedEntries, setSavedEntries] = useState([]);
-const { allEntries } = props.route.params;
+  const { allEntries } = props.route.params;
 
-useEffect(() => {
-  if (allEntries) {
-    setSavedEntries(prevEntries => [...prevEntries, ...allEntries]);
-  }
-}, [allEntries]);
- 
+  useEffect(() => {
+    if (allEntries) {
+      setSavedEntries((prevEntries) => [...prevEntries, ...allEntries]);
+    }
+  }, [allEntries]);
 
-
-  const submittedEntries = savedEntries?.map(entry => 
+  const submittedEntries = savedEntries?.map((entry) => (
     <View key={entry.id}>
-      <Pressable 
-        onLongPress={() => Alert.alert(
-          'Delete',
-          'Do you want to delete this entry?',
-          [
+      <Pressable
+        onLongPress={() =>
+          Alert.alert(
+            "Delete",
+            "Do you want to delete this entry?",
+            [
+              {
+                text: "Cancel",
+                style: "cancel",
+              },
+              {
+                text: "OK",
+                onPress: () => {
+                  console.log(
+                    "ENTRY TO DELETE:",
+                    JSON.stringify(entry, null, 2)
+                  );
+                  let remainingEntries = savedEntries.filter(
+                    (item) => item !== entry
+                  );
+                  console.log(
+                    "REMAINING ENTRIES:",
+                    JSON.stringify(remainingEntries, null, 2)
+                  );
+                  setSavedEntries(remainingEntries);
+                },
+              },
+            ],
             {
-              text: 'Cancel',
-              style: 'cancel'
-            },
-            {
-              text: 'OK',
-              onPress: () => {
-                console.log('ENTRY TO DELETE:', JSON.stringify(entry, null, 2))
-                let remainingEntries = savedEntries.filter(item => item !== entry)
-                console.log('REMAINING ENTRIES:', JSON.stringify(remainingEntries, null, 2))
-                setSavedEntries(remainingEntries)
-              }
+              cancelable: true,
             }
-          ],
-          {
-            cancelable: true,
-          }
-        )
-        }>
-        <Card key={entry.id}>
-          <Card.Title style={{fontWeight:'normal',fontSize:18,marginBottom:10}}>{entry.title}</Card.Title>
-          <View style={{display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems:'center',paddingHorizontal:5, paddingBottom:5}}>
-            <Text style={{textAlign:'center',fontSize:10}}>{entry?.date}</Text>
-            <Icon size={35} name={entry?.mood?.name} color={entry?.mood?.color} type='font-awesome-5' />
+          )
+        }
+      >
+        <View key={entry.id} className="bg-black mb-5 rounded-lg p-5">
+          <View className="flex flex-row items-center">
+            <Text className="text-gray-400">Plant Name : </Text>
+            <Text className="text-white">{entry.title}</Text>
           </View>
-          <Card.Divider />
-          <Text style={{fontSize:12,fontStyle:'normal',paddingHorizontal:5}}>{entry.text}</Text>
-
-        </Card>
+          {entry.images && entry.images[0] && (
+            <Image
+              className="w-full h-60 object-cover rounded-md mt-3"
+              source={{ uri: entry.images[0] }}
+            />
+          )}
+          <Text className="font-bold text-white my-3">{entry.text}</Text>
+          <Text className="text-gray-400 text-xs">
+            Created at : {entry?.date}
+          </Text>
+        </View>
       </Pressable>
     </View>
-  );
+  ));
   return (
-      <ScrollView style={styles.container}>
-        {submittedEntries}
-        <TouchableOpacity className="absolute bottom-4 right-4 bg-lime-800 p-3 px-4 rounded-full"
-        onPress={() => navigator.navigate("add-journal")}
+    <ScrollView className="bg-white h-screen p-5">
+      <View className="mb-10 pt-5 flex flex-row items-center">
+        <View className="w-4/6">
+          <Text className="text-xl font-semibold">Journal Entries</Text>
+          <Text className="text-gray-500">
+            Add entries to keep track of you plant progress.
+          </Text>
+        </View>
+        <TouchableOpacity
+          className=" bg-lime-800 p-3 px-4 rounded-full"
+          onPress={() => navigator.navigate("add-journal")}
         >
           <Text className="text-white font-bold">Add Entry +</Text>
         </TouchableOpacity>
-      </ScrollView>
-    );
-}
-
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor:'#C1F8CF',
-  }
-})
+      </View>
+      {submittedEntries}
+    </ScrollView>
+  );
+};
 
 export default SubmittedEntry;

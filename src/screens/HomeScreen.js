@@ -135,7 +135,7 @@ export default function HomeScreen() {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={()=> navigator.navigate("Plant")}>
+          <TouchableOpacity onPress={()=> navigator.navigate("Journal")}>
             <View
               className="mt-5 bg-lime-800 p-5 rounded-xl flex flex-row items-center justify-between"
               style={styles.shadow}
