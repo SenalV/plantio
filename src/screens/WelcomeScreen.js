@@ -14,6 +14,7 @@ export default function WelcomeScreen() {
             </Text>
             <View className="flex-row justify-center">
                 <Image source={require("../../assets/images/plant6.png")}
+
                     style={{width: 300, height: 520}} />
             </View>
             <View className="space-y-4">
